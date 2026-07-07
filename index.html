@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeriTools — Escalas, escores e prescrição para quem cuida de idosos</title>
+<meta name="description" content="GeriTools: 43 escalas geriátricas com escore automático e texto pronto para o prontuário, 17+ calculadoras clínicas e prescrição visual com IA. Uma ferramenta GeriClass para médicos que atendem pacientes idosos.">
+<meta property="og:title" content="GeriTools — a escala, o escore e o texto do prontuário em segundos">
+<meta property="og:description" content="43 escalas geriátricas com texto pronto, 17+ calculadoras clínicas, prescrição visual com IA e mini prontuário. Por GeriClass.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --verde-950:#072A1F;
+    --verde-900:#0B3D2D;
+    --verde-800:#114B39;
+    --verde-700:#1A5C47;
+    --dourado:#F2A50D;
+    --dourado-600:#D98F06;
+    --papel:#F6F8F6;
+    --branco:#FFFFFF;
+    --tinta:#13221B;
+    --tinta-suave:#4F6157;
+    --linha:#DCE5DE;
+    --tinta-verde:#EDF3EE;
+    --claro:#F4F7F4;
+    --claro-suave:#AFC5B8;
+    --hairline-escura:rgba(244,247,244,.16);
+    --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"Archivo",-apple-system,"Segoe UI",Roboto,sans-serif;
+    --mono:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0ms!important;transition-duration:.01ms!important}
+  }
+  body{
+    font-family:var(--sans);
+    color:var(--tinta);
+    background:var(--papel);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  a{color:inherit}
+  img,svg{max-width:100%;display:block}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+  @media(min-width:768px){.wrap{padding:0 32px}}
+
+  /* ---------- utilitários tipográficos ---------- */
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:.72rem;
+    font-weight:500;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--verde-700);
+    display:flex;align-items:center;gap:.75rem;
+  }
+  .eyebrow::after{content:"";flex:1;max-width:64px;height:1px;background:var(--linha)}
+  .eyebrow.on-dark{color:var(--dourado)}
+  .eyebrow.on-dark::after{background:var(--hairline-escura)}
+  h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.15;letter-spacing:-.01em}
+
+  /* ---------- botões ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+    font-family:var(--sans);font-weight:600;font-size:.95rem;
+    padding:.85rem 1.5rem;border-radius:6px;border:1px solid transparent;
+    text-decoration:none;cursor:pointer;transition:background .18s,border-color .18s,color .18s;
+  }
+  .btn:focus-visible{outline:3px solid var(--dourado);outline-offset:2px}
+  .btn-gold{background:var(--dourado);color:var(--verde-950);border-color:var(--dourado)}
+  .btn-gold:hover{background:var(--dourado-600);border-color:var(--dourado-600)}
+  .btn-ghost-dark{background:transparent;color:var(--claro);border-color:var(--hairline-escura)}
+  .btn-ghost-dark:hover{border-color:var(--claro-suave)}
+  .btn-ghost-light{background:transparent;color:var(--verde-900);border-color:var(--linha)}
+  .btn-ghost-light:hover{border-color:var(--verde-700)}
+
+  /* ---------- header ---------- */
+  .topo{
+    position:sticky;top:0;z-index:50;
+    background:rgba(11,61,45,.92);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--hairline-escura);
+  }
+  .topo-inner{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .logo{font-family:var(--serif);font-size:1.3rem;font-weight:700;color:var(--claro);text-decoration:none;letter-spacing:-.01em}
+  .logo b{color:var(--dourado);font-weight:700}
+  .logo small{display:block;font-family:var(--mono);font-size:.55rem;font-weight:500;letter-spacing:.22em;color:var(--claro-suave);text-transform:uppercase;line-height:1;margin-top:1px}
+  .topo .btn{padding:.5rem 1.1rem;font-size:.85rem}
+  .topo-nav{display:none;gap:1.6rem}
+  .topo-nav a{font-size:.85rem;font-weight:500;color:var(--claro-suave);text-decoration:none}
+  .topo-nav a:hover{color:var(--claro)}
+  @media(min-width:900px){.topo-nav{display:flex}}
+
+  /* ---------- hero ---------- */
+  .hero{background:linear-gradient(178deg,var(--verde-900) 0%,var(--verde-950) 100%);color:var(--claro);overflow:hidden}
+  .hero-grid{display:grid;gap:2.75rem;padding:3.25rem 0 3.5rem}
+  @media(min-width:960px){
+    .hero-grid{grid-template-columns:1.05fr .95fr;gap:4rem;align-items:center;padding:4.5rem 0 5rem}
+  }
+  .hero h1{font-size:clamp(2rem,5.6vw,3.3rem);color:var(--branco);margin:1.1rem 0 1.2rem}
+  .hero h1 em{font-style:normal;color:var(--dourado)}
+  .hero p.lead{font-size:1.05rem;color:var(--claro-suave);max-width:34rem}
+  .hero-ctas{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.9rem}
+  .hero-nota{margin-top:1.4rem;font-size:.8rem;color:var(--claro-suave);opacity:.85}
+
+  /* mock: escala FRAIL */
+  .mock-escala{
+    background:var(--branco);color:var(--tinta);
+    border-radius:10px;box-shadow:0 24px 60px rgba(0,0,0,.35);
+    max-width:430px;margin:0 auto;width:100%;
+  }
+  .mock-cab{
+    display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
+    padding:.9rem 1.15rem;border-bottom:1px solid var(--linha);
+  }
+  .mock-cab .rotulo{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-suave)}
+  .mock-cab .nome{font-family:var(--serif);font-weight:700;font-size:1.05rem}
+  .mock-corpo{padding:.5rem 1.15rem .9rem}
+  .item-escala{
+    display:flex;align-items:center;gap:.7rem;
+    padding:.55rem 0;border-bottom:1px dashed var(--linha);
+    font-size:.85rem;
+    opacity:0;animation:surge .4s ease forwards;
+  }
+  .item-escala:nth-child(1){animation-delay:.25s}
+  .item-escala:nth-child(2){animation-delay:.55s}
+  .item-escala:nth-child(3){animation-delay:.85s}
+  .item-escala:nth-child(4){animation-delay:1.15s}
+  .item-escala:nth-child(5){animation-delay:1.45s}
+  .item-escala .perg{flex:1;color:var(--tinta)}
+  .item-escala .perg small{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta-suave)}
+  .resp{
+    font-family:var(--mono);font-size:.68rem;font-weight:600;
+    padding:.15rem .55rem;border-radius:99px;white-space:nowrap;
+  }
+  .resp-sim{background:var(--verde-900);color:var(--branco)}
+  .resp-nao{background:var(--tinta-verde);color:var(--tinta-suave)}
+  .mock-resultado{
+    display:flex;align-items:center;justify-content:space-between;gap:1rem;
+    margin-top:.9rem;padding:.75rem .9rem;border-radius:8px;
+    background:var(--verde-900);color:var(--branco);
+    opacity:0;animation:surge .45s ease forwards;animation-delay:1.9s;
+  }
+  .mock-resultado .escore{font-family:var(--serif);font-size:1.5rem;font-weight:700}
+  .mock-resultado .escore span{font-size:.85rem;font-weight:600;opacity:.7}
+  .tag-nivel{
+    font-family:var(--mono);font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    background:var(--dourado);color:var(--verde-950);padding:.3rem .7rem;border-radius:4px;
+  }
+  .mock-texto{
+    margin-top:.9rem;border:1px solid var(--linha);border-left:3px solid var(--dourado);
+    border-radius:6px;padding:.8rem .9rem;background:var(--papel);
+    opacity:0;animation:surge .45s ease forwards;animation-delay:2.35s;
+  }
+  .mock-texto .rotulo{
+    display:flex;align-items:center;justify-content:space-between;
+    font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-suave);
+    margin-bottom:.45rem;
+  }
+  .btn-copiar{
+    font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    background:var(--branco);border:1px solid var(--linha);border-radius:4px;
+    padding:.25rem .6rem;cursor:pointer;color:var(--verde-800);transition:border-color .15s;
+  }
+  .btn-copiar:hover{border-color:var(--verde-700)}
+  .btn-copiar:focus-visible{outline:2px solid var(--dourado);outline-offset:2px}
+  .mock-texto p{font-size:.78rem;line-height:1.55;color:var(--tinta)}
+  @keyframes surge{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* ---------- faixa de escopo ---------- */
+  .escopo{background:var(--verde-950);border-top:1px solid var(--hairline-escura)}
+  .escopo-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);
+    padding:1.6rem 0;gap:1.25rem 1rem;
+  }
+  @media(min-width:768px){.escopo-grid{grid-template-columns:repeat(4,1fr);padding:1.9rem 0}}
+  .escopo-item{color:var(--claro)}
+  .escopo-item .num{font-family:var(--serif);font-size:1.7rem;font-weight:700;line-height:1.1;color:var(--dourado)}
+  .escopo-item .desc{font-size:.8rem;color:var(--claro-suave);margin-top:.2rem}
+
+  /* ---------- seções ---------- */
+  section{padding:4rem 0}
+  @media(min-width:960px){section{padding:5.5rem 0}}
+  .sec-cab{max-width:40rem;margin-bottom:2.5rem}
+  .sec-cab h2{font-size:clamp(1.6rem,4vw,2.4rem);margin:.9rem 0 .8rem;color:var(--verde-950)}
+  .sec-cab p{color:var(--tinta-suave);font-size:1rem}
+
+  /* ---------- módulos ---------- */
+  .modulos-grid{display:grid;gap:1.25rem}
+  @media(min-width:768px){.modulos-grid{grid-template-columns:repeat(2,1fr)}}
+  .modulo{
+    background:var(--branco);border:1px solid var(--linha);border-radius:10px;
+    padding:1.6rem 1.5rem 1.7rem;display:flex;flex-direction:column;gap:.8rem;
+  }
+  .modulo.destaque{grid-column:1/-1}
+  .modulo .icone{
+    width:38px;height:38px;border-radius:8px;background:var(--tinta-verde);
+    display:flex;align-items:center;justify-content:center;color:var(--verde-800);
+  }
+  .modulo h3{font-size:1.25rem;color:var(--verde-950)}
+  .modulo p{font-size:.92rem;color:var(--tinta-suave)}
+  .modulo .valor{font-weight:600;color:var(--verde-900)}
+  .chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.25rem}
+  .chip{
+    font-family:var(--mono);font-size:.64rem;font-weight:500;letter-spacing:.05em;
+    background:var(--tinta-verde);color:var(--verde-800);
+    padding:.25rem .6rem;border-radius:99px;white-space:nowrap;
+  }
+  .chip.ouro{background:#FCEFD3;color:#7A5203}
+  .lista-escalas{font-size:.82rem;color:var(--tinta-suave);line-height:1.7;margin-top:.25rem}
+  .lista-escalas b{color:var(--tinta);font-weight:600}
+
+  /* ---------- prescrição IA ---------- */
+  .rx{background:var(--verde-900);color:var(--claro)}
+  .rx .sec-cab h2{color:var(--branco)}
+  .rx .sec-cab p{color:var(--claro-suave)}
+  .rx-grid{display:grid;gap:3rem}
+  @media(min-width:960px){.rx-grid{grid-template-columns:.9fr 1.1fr;gap:4rem;align-items:center}}
+  .rx-passos{list-style:none;display:flex;flex-direction:column;gap:0;counter-reset:passo}
+  .rx-passo{
+    counter-increment:passo;position:relative;
+    padding:1.1rem 0 1.1rem 3.2rem;border-bottom:1px solid var(--hairline-escura);
+  }
+  .rx-passo:last-child{border-bottom:none}
+  .rx-passo::before{
+    content:counter(passo,decimal-leading-zero);
+    position:absolute;left:0;top:1.2rem;
+    font-family:var(--mono);font-size:.8rem;font-weight:600;color:var(--dourado);
+  }
+  .rx-passo h3{font-size:1.05rem;color:var(--branco);font-family:var(--sans);font-weight:600;letter-spacing:0}
+  .rx-passo p{font-size:.88rem;color:var(--claro-suave);margin-top:.25rem}
+
+  /* mock: cartão de medicações */
+  .mock-cartao{
+    background:var(--branco);color:var(--tinta);border-radius:10px;
+    box-shadow:0 24px 60px rgba(0,0,0,.35);max-width:460px;margin:0 auto;width:100%;
+    overflow:hidden;
+  }
+  .cartao-cab{
+    display:flex;align-items:center;gap:.75rem;
+    padding:.9rem 1.15rem;border-bottom:2px solid var(--verde-900);
+  }
+  .cartao-logo{
+    width:34px;height:34px;border-radius:50%;flex:none;
+    background:var(--verde-900);color:var(--dourado);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--serif);font-weight:700;font-size:.9rem;
+  }
+  .cartao-cab .tit{font-weight:600;font-size:.9rem;line-height:1.3}
+  .cartao-cab .tit small{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta-suave);font-weight:500}
+  .jejum{
+    display:flex;gap:.7rem;align-items:flex-start;
+    background:#FCEFD3;border-bottom:1px solid #F0DDB0;
+    padding:.7rem 1.15rem;
+  }
+  .jejum .selo{
+    font-family:var(--mono);font-size:.58rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+    background:var(--dourado);color:var(--verde-950);border-radius:3px;padding:.2rem .45rem;margin-top:.1rem;white-space:nowrap;
+  }
+  .jejum .med{font-size:.82rem}
+  .jejum .med small{display:block;color:#7A5203;font-size:.72rem}
+  .periodo{padding:.6rem 1.15rem;border-bottom:1px dashed var(--linha)}
+  .periodo:last-of-type{border-bottom:none}
+  .periodo .p-tit{
+    display:flex;align-items:center;gap:.5rem;
+    font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--verde-800);
+    margin-bottom:.35rem;
+  }
+  .periodo .p-tit svg{width:13px;height:13px;flex:none}
+  .med-linha{display:flex;justify-content:space-between;gap:1rem;font-size:.83rem;padding:.18rem 0}
+  .med-linha .obs{color:var(--tinta-suave);font-size:.75rem;white-space:nowrap}
+  .cartao-acoes{
+    display:flex;gap:.5rem;padding:.8rem 1.15rem;background:var(--papel);border-top:1px solid var(--linha);
+  }
+  .acao{
+    flex:1;text-align:center;font-family:var(--mono);font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    border:1px solid var(--linha);border-radius:5px;padding:.5rem .25rem;color:var(--verde-800);background:var(--branco);
+  }
+  .rx-legenda{
+    text-align:center;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--claro-suave);margin-top:1rem;
+  }
+
+  /* ---------- prontuário ---------- */
+  .pront-grid{display:grid;gap:2.5rem}
+  @media(min-width:960px){.pront-grid{grid-template-columns:1.05fr .95fr;gap:4rem;align-items:center}}
+  .pront-lista{list-style:none;display:flex;flex-direction:column;gap:1rem;margin-top:1.5rem}
+  .pront-lista li{display:flex;gap:.8rem;font-size:.95rem;color:var(--tinta-suave)}
+  .pront-lista li svg{flex:none;width:20px;height:20px;color:var(--verde-800);margin-top:.15rem}
+  .pront-lista li b{color:var(--tinta)}
+
+  .mock-pront{
+    background:var(--branco);border:1px solid var(--linha);border-radius:10px;
+    max-width:460px;width:100%;margin:0 auto;overflow:hidden;
+    box-shadow:0 12px 36px rgba(11,61,45,.10);
+  }
+  .pront-cab{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.9rem 1.15rem;border-bottom:1px solid var(--linha)}
+  .pront-cab .paciente{font-weight:600;font-size:.92rem}
+  .pront-cab .paciente small{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta-suave);font-weight:500}
+  .pront-pdf{font-family:var(--mono);font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--linha);border-radius:5px;padding:.4rem .7rem;color:var(--verde-800);white-space:nowrap}
+  .evento{display:flex;align-items:center;gap:.8rem;padding:.65rem 1.15rem;border-bottom:1px dashed var(--linha);font-size:.83rem}
+  .evento .data{font-family:var(--mono);font-size:.66rem;color:var(--tinta-suave);white-space:nowrap;width:52px;flex:none}
+  .evento .oque{flex:1}
+  .evento .oque small{display:block;color:var(--tinta-suave);font-size:.72rem}
+  .evento .val{font-family:var(--mono);font-size:.72rem;font-weight:600;color:var(--verde-800);white-space:nowrap}
+  .grafico{padding:.9rem 1.15rem 1.1rem}
+  .grafico .g-tit{font-family:var(--mono);font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-suave);margin-bottom:.5rem}
+  .grafico svg{width:100%;height:auto}
+
+  /* ---------- avaliação rápida strip ---------- */
+  .fluxo{background:var(--tinta-verde)}
+  .fluxo-chips{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-top:1.6rem}
+  .fluxo-chip{
+    font-family:var(--mono);font-size:.7rem;font-weight:600;letter-spacing:.05em;
+    background:var(--branco);border:1px solid var(--linha);color:var(--verde-900);
+    padding:.45rem .8rem;border-radius:6px;
+  }
+  .fluxo-seta{color:var(--verde-700);font-family:var(--mono);font-size:.8rem}
+  .fluxo-chip.soma{background:var(--verde-900);color:var(--branco);border-color:var(--verde-900)}
+
+  /* ---------- CTA final ---------- */
+  .cta-final{background:linear-gradient(178deg,var(--verde-900),var(--verde-950));color:var(--claro);text-align:center}
+  .cta-final h2{font-size:clamp(1.7rem,4.5vw,2.6rem);color:var(--branco);max-width:34rem;margin:1rem auto .9rem}
+  .cta-final p{color:var(--claro-suave);max-width:32rem;margin:0 auto}
+  .cta-final .hero-ctas{justify-content:center}
+  .cta-final .eyebrow{justify-content:center}
+  .cta-final .eyebrow::after{display:none}
+
+  /* ---------- footer ---------- */
+  footer{background:var(--verde-950);color:var(--claro-suave);padding:2.2rem 0 2.6rem;border-top:1px solid var(--hairline-escura)}
+  .foot-grid{display:flex;flex-direction:column;gap:1.4rem}
+  @media(min-width:768px){.foot-grid{flex-direction:row;justify-content:space-between;align-items:flex-start}}
+  .disclaimer{
+    font-size:.8rem;max-width:30rem;
+    border-left:2px solid var(--dourado);padding-left:.9rem;color:var(--claro-suave);
+  }
+  .foot-fim{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;margin-top:1.8rem;color:rgba(175,197,184,.6)}
+
+  /* ---------- reveal on scroll (só esconde com JS ativo) ---------- */
+  html.js .reveal{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+  html.js .reveal.visto{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){html.js .reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="wrap topo-inner">
+    <a class="logo" href="#">Geri<b>Tools</b><small>por GeriClass</small></a>
+    <nav class="topo-nav" aria-label="Seções da página">
+      <a href="#modulos">Módulos</a>
+      <a href="#prescricao">Prescrição com IA</a>
+      <a href="#prontuario">Mini prontuário</a>
+    </nav>
+    <a class="btn btn-gold" href="#comecar">Comece a usar</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" style="padding:0">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow on-dark">GeriClass · Apoio à prática geriátrica</p>
+        <h1>A escala aplicada, o escore calculado e o texto do prontuário. <em>Em segundos.</em></h1>
+        <p class="lead">Você já sabe aplicar as escalas. O que rouba o seu tempo é calcular na mão, classificar e ainda redigir a interpretação. O GeriTools faz as três coisas de uma vez — no consultório ou à beira do leito.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-gold" href="#comecar">Comece a usar</a>
+          <a class="btn btn-ghost-dark" href="#modulos">Conhecer os módulos</a>
+        </div>
+        <p class="hero-nota">Feito para geriatras — e para todo médico que atende pacientes idosos.</p>
+      </div>
+
+      <div class="mock-escala" role="img" aria-label="Demonstração do GeriTools: escala FRAIL respondida, escore 3 de 5 classificado como frágil e texto pronto para o prontuário">
+        <div class="mock-cab">
+          <div>
+            <div class="rotulo">Escala · Fragilidade</div>
+            <div class="nome">FRAIL</div>
+          </div>
+          <div class="rotulo">5 itens · ~40 s</div>
+        </div>
+        <div class="mock-corpo">
+          <div class="item-escala"><div class="perg"><small>Fadiga</small>Sente-se cansado(a) a maior parte do tempo?</div><span class="resp resp-sim">Sim · 1</span></div>
+          <div class="item-escala"><div class="perg"><small>Resistência</small>Dificuldade para subir um lance de escadas?</div><span class="resp resp-sim">Sim · 1</span></div>
+          <div class="item-escala"><div class="perg"><small>Aeróbio</small>Dificuldade para caminhar um quarteirão?</div><span class="resp resp-nao">Não · 0</span></div>
+          <div class="item-escala"><div class="perg"><small>Doenças</small>Cinco ou mais doenças crônicas?</div><span class="resp resp-nao">Não · 0</span></div>
+          <div class="item-escala" style="border-bottom:none"><div class="perg"><small>Perda de peso</small>Perdeu mais de 5% do peso no último ano?</div><span class="resp resp-sim">Sim · 1</span></div>
+
+          <div class="mock-resultado">
+            <div class="escore">3<span>/5</span></div>
+            <span class="tag-nivel">Frágil</span>
+          </div>
+
+          <div class="mock-texto">
+            <div class="rotulo"><span>Texto para o prontuário</span><button class="btn-copiar" type="button" data-copiar>Copiar</button></div>
+            <p>Aplicada escala FRAIL: 3/5 pontos (fadiga, resistência, perda ponderal), compatível com <b>fragilidade</b>. Recomenda-se avaliação geriátrica ampla e investigação de causas reversíveis.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ESCOPO REAL ============ -->
+  <div class="escopo">
+    <div class="wrap escopo-grid">
+      <div class="escopo-item"><div class="num">43</div><div class="desc">escalas geriátricas com escore e texto prontos</div></div>
+      <div class="escopo-item"><div class="num">17+</div><div class="desc">calculadoras e índices clínicos — e aumentando sempre</div></div>
+      <div class="escopo-item"><div class="num">8</div><div class="desc">domínios: cognição, fragilidade, funcionalidade, humor, cuidador, nutrição, sarcopenia e quedas</div></div>
+      <div class="escopo-item"><div class="num">PWA</div><div class="desc">instala no celular e funciona offline, com sincronização automática</div></div>
+    </div>
+  </div>
+
+  <!-- ============ MÓDULOS ============ -->
+  <section id="modulos">
+    <div class="wrap">
+      <div class="sec-cab reveal">
+        <p class="eyebrow">Módulos</p>
+        <h2>O trabalho repetitivo do consultório, resolvido em um lugar só</h2>
+        <p>Cada módulo ataca uma tarefa que hoje consome minutos da consulta — e devolve esse tempo para a conversa com o paciente.</p>
+      </div>
+
+      <div class="modulos-grid">
+        <article class="modulo destaque reveal">
+          <div class="icone" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M21 12v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11"/></svg></div>
+          <h3>43 escalas — do rastreio ao texto pronto</h3>
+          <p><span class="valor">Perguntas guiadas → escore automático → classificação de severidade → interpretação clínica → texto pronto para copiar e colar no prontuário.</span> Uma escala que levava dez minutos entre aplicar, somar e redigir sai completa em segundos.</p>
+          <div class="chips" aria-label="Domínios cobertos">
+            <span class="chip">Cognição</span><span class="chip">Fragilidade</span><span class="chip">Funcionalidade</span><span class="chip">Humor</span><span class="chip">Cuidador</span><span class="chip">Nutrição</span><span class="chip">Sarcopenia</span><span class="chip">Quedas</span>
+          </div>
+          <p class="lista-escalas"><b>Clinical Frailty Scale</b> · FRAIL · <b>Katz (ABVD)</b> · Lawton-Brody (AIVD) · <b>Mini-Cog</b> · CAM (delirium) · <b>GDS-15</b> · Zarit reduzida · MNA-SF · SARC-F · Timed Up and Go · <b>MoCA</b> · MEEM · Barthel · Tinetti · Morse · Braden · IVCF-20 · ICOPE · PHQ-9 · GAD-7 · Cornell · CDR · Pfeffer · AD8 · IQCODE · VES-13 · DASS-21 — entre outras.</p>
+        </article>
+
+        <article class="modulo reveal">
+          <div class="icone" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2m4 0h2M8 14h2m4 0h2M8 18h2m4 0h2"/></svg></div>
+          <h3>17+ calculadoras clínicas</h3>
+          <p>Risco cardiovascular (<b>AHA PREVENT</b> e Framingham/ERG), <b>CHA₂DS₂-VASc + HAS-BLED</b> para fibrilação atrial, TFG (<b>CKD-EPI 2021</b>) e Cockcroft-Gault, índices prognósticos (Charlson, Lee, Walter, Suemoto), <b>carga anticolinérgica da prescrição (ACB)</b>, IMC do idoso (Lipschitz), necessidades nutricionais (ESPEN), cálcio corrigido e triagem de osteoporose (OST).</p>
+        </article>
+
+        <article class="modulo reveal">
+          <div class="icone" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></div>
+          <h3>Favoritos, mais usadas e painéis próprios</h3>
+          <p>Cada médico atende de um jeito. Fixe as escalas que você mais usa, monte painéis por tipo de consulta e abra direto no que interessa — <span class="valor">sem procurar em menu nenhum</span>.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AVALIAÇÃO RÁPIDA ============ -->
+  <section class="fluxo">
+    <div class="wrap">
+      <div class="sec-cab reveal" style="margin-bottom:0">
+        <p class="eyebrow">Avaliação rápida</p>
+        <h2>Sequências de escalas em um fluxo só</h2>
+        <p>Use sequências pré-definidas — como o rastreio cognitivo + funcional + humor — ou monte a sua na hora. Ao final, um resumo integrado com todos os escores e textos.</p>
+      </div>
+      <div class="fluxo-chips reveal" aria-label="Exemplo de sequência: Mini-Cog, depois Katz, depois GDS-15, resultando em resumo integrado">
+        <span class="fluxo-chip">Mini-Cog</span>
+        <span class="fluxo-seta" aria-hidden="true">→</span>
+        <span class="fluxo-chip">Katz (ABVD)</span>
+        <span class="fluxo-seta" aria-hidden="true">→</span>
+        <span class="fluxo-chip">GDS-15</span>
+        <span class="fluxo-seta" aria-hidden="true">→</span>
+        <span class="fluxo-chip soma">Resumo integrado + textos prontos</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRESCRIÇÃO COM IA ============ -->
+  <section class="rx" id="prescricao">
+    <div class="wrap">
+      <div class="sec-cab reveal">
+        <p class="eyebrow on-dark">Prescrição com IA</p>
+        <h2>Da receita ao cartão que o paciente entende</h2>
+        <p>Paciente idoso com sete medicamentos não precisa decifrar receita — precisa saber o que tomar em cada momento do dia. O GeriTools organiza isso por você.</p>
+      </div>
+
+      <div class="rx-grid">
+        <ol class="rx-passos reveal">
+          <li class="rx-passo">
+            <h3>Envie a receita como ela existir</h3>
+            <p>Tire uma foto, envie o PDF ou cole o texto. A IA extrai os medicamentos, doses e horários automaticamente.</p>
+          </li>
+          <li class="rx-passo">
+            <h3>Revise — a palavra final é sua</h3>
+            <p>Você confere cada item extraído, corrige o que precisar e confirma. Nada sai sem a sua revisão.</p>
+          </li>
+          <li class="rx-passo">
+            <h3>Entregue um cartão visual, não uma bula</h3>
+            <p>Medicações organizadas por período do dia, jejum destacado, com a sua logomarca. Pronto para baixar, imprimir ou enviar por WhatsApp ao paciente ou cuidador.</p>
+          </li>
+        </ol>
+
+        <div>
+          <div class="mock-cartao reveal" role="img" aria-label="Exemplo do cartão de medicações gerado pelo GeriTools, organizado por período do dia com destaque para medicação em jejum">
+            <div class="cartao-cab">
+              <div class="cartao-logo" aria-hidden="true">Dr</div>
+              <div class="tit"><small>Cartão de medicações</small>Maria · 82 anos</div>
+            </div>
+            <div class="jejum">
+              <span class="selo">Em jejum</span>
+              <div class="med">Levotiroxina 75 mcg<small>30 minutos antes do café da manhã</small></div>
+            </div>
+            <div class="periodo">
+              <div class="p-tit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Manhã</div>
+              <div class="med-linha"><span>Losartana 50 mg</span><span class="obs">1 comprimido</span></div>
+              <div class="med-linha"><span>Sertralina 50 mg</span><span class="obs">1 comprimido</span></div>
+            </div>
+            <div class="periodo">
+              <div class="p-tit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="10" r="5"/><path d="M4 20h16"/></svg>Almoço</div>
+              <div class="med-linha"><span>Metformina 850 mg</span><span class="obs">após a refeição</span></div>
+            </div>
+            <div class="periodo">
+              <div class="p-tit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>Noite</div>
+              <div class="med-linha"><span>Rosuvastatina 10 mg</span><span class="obs">1 comprimido</span></div>
+              <div class="med-linha"><span>Donepezila 10 mg</span><span class="obs">ao deitar</span></div>
+            </div>
+            <div class="cartao-acoes" aria-hidden="true">
+              <span class="acao">Baixar</span><span class="acao">Imprimir</span><span class="acao">WhatsApp</span>
+            </div>
+          </div>
+          <p class="rx-legenda">Cartão ilustrativo · personalizável com a sua logomarca</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MINI PRONTUÁRIO ============ -->
+  <section id="prontuario">
+    <div class="wrap pront-grid">
+      <div class="reveal">
+        <p class="eyebrow">Mini prontuário</p>
+        <h2 style="font-size:clamp(1.6rem,4vw,2.4rem);margin:.9rem 0 .8rem;color:var(--verde-950)">Cada paciente, uma linha do tempo</h2>
+        <p style="color:var(--tinta-suave)">Cadastre o paciente uma vez. A partir daí, tudo o que você fizer fica no mesmo lugar — e a evolução aparece sozinha.</p>
+        <ul class="pront-lista">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M21 12v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11"/></svg><span><b>Escalas aplicadas</b> com data, escore e classificação — compare o MEEM de hoje com o de seis meses atrás sem folhear nada.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-8"/><path d="M15 8h5v5"/></svg><span><b>Gráfico de evolução</b> ao longo do tempo, escala por escala.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3 3 3-3"/></svg><span><b>PDF consolidado</b> com escalas, prescrições e cálculos salvos — pronto para anexar ao prontuário oficial.</span></li>
+        </ul>
+      </div>
+
+      <div class="mock-pront reveal" role="img" aria-label="Exemplo do mini prontuário: linha do tempo de escalas aplicadas e gráfico de evolução do MEEM">
+        <div class="pront-cab">
+          <div class="paciente"><small>Paciente</small>José · 79 anos</div>
+          <span class="pront-pdf">Exportar PDF</span>
+        </div>
+        <div class="evento"><span class="data">12 mar</span><div class="oque">MEEM<small>Rastreio cognitivo</small></div><span class="val">24/30</span></div>
+        <div class="evento"><span class="data">12 mar</span><div class="oque">GDS-15<small>Humor</small></div><span class="val">4/15</span></div>
+        <div class="evento"><span class="data">10 jun</span><div class="oque">MEEM<small>Rastreio cognitivo</small></div><span class="val">23/30</span></div>
+        <div class="evento"><span class="data">10 jun</span><div class="oque">Cartão de medicações<small>Prescrição com IA</small></div><span class="val">6 itens</span></div>
+        <div class="grafico">
+          <div class="g-tit">Evolução · MEEM</div>
+          <svg viewBox="0 0 320 84" role="img" aria-label="Gráfico de linha mostrando escores do MEEM: 26, 24 e 23 pontos em três datas">
+            <line x1="8" y1="70" x2="312" y2="70" stroke="#DCE5DE" stroke-width="1"/>
+            <line x1="8" y1="40" x2="312" y2="40" stroke="#EDF3EE" stroke-width="1"/>
+            <line x1="8" y1="10" x2="312" y2="10" stroke="#EDF3EE" stroke-width="1"/>
+            <polyline points="30,22 160,38 290,46" fill="none" stroke="#0B3D2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="30" cy="22" r="4" fill="#0B3D2D"/>
+            <circle cx="160" cy="38" r="4" fill="#0B3D2D"/>
+            <circle cx="290" cy="46" r="4.5" fill="#F2A50D" stroke="#0B3D2D" stroke-width="1.5"/>
+            <text x="30" y="12" font-family="IBM Plex Mono,monospace" font-size="9" fill="#4F6157" text-anchor="middle">26</text>
+            <text x="160" y="28" font-family="IBM Plex Mono,monospace" font-size="9" fill="#4F6157" text-anchor="middle">24</text>
+            <text x="290" y="36" font-family="IBM Plex Mono,monospace" font-size="9" fill="#4F6157" text-anchor="middle">23</text>
+            <text x="30" y="81" font-family="IBM Plex Mono,monospace" font-size="8" fill="#AFC5B8" text-anchor="middle">set/25</text>
+            <text x="160" y="81" font-family="IBM Plex Mono,monospace" font-size="8" fill="#AFC5B8" text-anchor="middle">mar/26</text>
+            <text x="290" y="81" font-family="IBM Plex Mono,monospace" font-size="8" fill="#AFC5B8" text-anchor="middle">jun/26</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA FINAL ============ -->
+  <section class="cta-final" id="comecar">
+    <div class="wrap reveal">
+      <p class="eyebrow on-dark">GeriTools · GeriClass</p>
+      <h2>Menos conta de cabeça. Mais tempo de consulta.</h2>
+      <p>O GeriTools é oferecido junto com a assinatura GeriClass — a comunidade de mentoria e cursos de geriatria. Fale com a gente e comece a usar hoje.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-gold" href="#">Comece a usar</a>
+        <a class="btn btn-ghost-dark" href="#">Fale com a GeriClass</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <a class="logo" href="#" style="font-size:1.15rem">Geri<b>Tools</b><small>por GeriClass</small></a>
+      <p class="disclaimer">Ferramenta de apoio à prática médica. Não substitui julgamento clínico. Escalas, cálculos e textos gerados devem ser revisados pelo médico responsável antes do registro em prontuário.</p>
+    </div>
+    <p class="foot-fim">GeriTools · um produto do ecossistema GeriClass</p>
+  </div>
+</footer>
+
+<script>
+  // Revelar seções ao rolar
+  (function(){
+    if(!('IntersectionObserver' in window))return;
+    document.documentElement.classList.add('js');
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){e.target.classList.add('visto');obs.unobserve(e.target)}
+      });
+    },{threshold:.12});
+    document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el)});
+  })();
+
+  // Feedback do botão "Copiar" do mock
+  (function(){
+    var btn=document.querySelector('[data-copiar]');
+    if(!btn)return;
+    btn.addEventListener('click',function(){
+      var original=btn.textContent;
+      btn.textContent='Copiado ✓';
+      btn.disabled=true;
+      setTimeout(function(){btn.textContent=original;btn.disabled=false},1600);
+    });
+  })();
+</script>
+
+</body>
+</html>
